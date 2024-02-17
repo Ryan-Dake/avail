@@ -3,18 +3,21 @@ package com.dake.avail;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+
 @RestController
 public class AvailController {
 
-    private GoogleCalenderHelper googleCalenderHelper;
+    private final CalendarService calendarService;
 
-    public AvailController(GoogleCalenderHelper googleCalenderHelper) {
-        this.googleCalenderHelper = googleCalenderHelper;
+    public AvailController(CalendarService calendarService) {
+        this.calendarService = calendarService;
     }
 
-    @GetMapping("/hello")
-    public String helloWorld() {
-        return googleCalenderHelper.getAvailability();
+    @GetMapping("/avail")
+    public String avail() throws GeneralSecurityException, IOException {
+        return calendarService.getAvailability().toString();
     }
 
 }

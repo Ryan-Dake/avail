@@ -37,3 +37,4 @@ out/
 .vscode/
 
 /tokens/
+credentials.json
