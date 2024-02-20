@@ -48,6 +48,8 @@ public class CalendarService {
         System.out.println("FreeBusy Response: " + response.toString());
 
         FreeBusyCalendar calendar = response.getCalendars().get("primary");
+        List<TimePeriod> busyList = calendar.getBusy();
+
         System.out.println(calendar);
         return calendar;
     }
