@@ -5,11 +5,13 @@ import org.junit.jupiter.api.Test;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+
 class AvailCalendarHelperTests {
     @Test
     void getsTheFirstDayOfWorkWeek() {
@@ -92,6 +94,33 @@ class AvailCalendarHelperTests {
         //then TODO create full result object and properly assert
         assertTrue(calendar.get(DayOfWeek.MONDAY).get(0).isAvailable());
         assertEquals(9, calendar.get(DayOfWeek.MONDAY).size());
+    }
+
+    @Test
+    void getCurrentWorkWeekReturnsAWeekWithBusy() {
+        //given
+        AvailCalendarHelper availCalendarHelper = new AvailCalendarHelper();
+
+        //when
+        Map<DayOfWeek, List<CalendarBlock>> calendar = availCalendarHelper.getNewWorkWeekCalendar(LocalDate.of(2024, 2, 20));
+
+        ArrayList<LocalDateTime> busyHours = new ArrayList<>();
+        busyHours.add(LocalDateTime.of(2024, 2, 20, 11, 0));
+        busyHours.add(LocalDateTime.of(2024, 2, 21, 9, 0));
+        busyHours.add(LocalDateTime.of(2024, 2, 23, 17, 0));
+        calendar = availCalendarHelper.markBusyHours(calendar, busyHours);
+        System.out.println("Busy calendar: ");
+        System.out.println(calendar);
+
+        boolean tuesdayAvailability = calendar.get(DayOfWeek.TUESDAY).get(2).isAvailable();
+        boolean wednesdayAvailability = calendar.get(DayOfWeek.WEDNESDAY).get(0).isAvailable();
+        boolean fridayAvailability = calendar.get(DayOfWeek.FRIDAY).get(8).isAvailable();
+
+        //then
+        assertTrue(calendar.get(DayOfWeek.MONDAY).get(0).isAvailable());
+        assertFalse(tuesdayAvailability);
+        assertFalse(wednesdayAvailability);
+        assertFalse(fridayAvailability);
     }
 
 }
